@@ -499,7 +499,8 @@ relationship between alcohol level and quality.</br>
 
 I struggled to find relationships between many of the factors. They seemed
 irrelevant to my analysis. They contributed very little, if not at all, to the
-main Quality factor.</br>
+main Quality factor. Overall, I think I was successful at discovering the 
+factors that made the biggest difference.</br>
 
 It would be interesting to contrast the white wines with the sister data set of
 red wines. I'm curious to see the chemical differences there are between them.
