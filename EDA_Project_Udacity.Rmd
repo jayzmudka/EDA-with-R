@@ -17,7 +17,7 @@
 # for other code chunks once you have verified that each plot comes out as you
 # want it to. This will clean up the flow of your report.
 
-
+# Load libraries
 library(ggplot2)
 library(knitr)
 library(RColorBrewer)
@@ -56,6 +56,7 @@ have a quality rating of 5 or 6.
 
 
 ```{r echo=FALSE, message = FALSE, alcohol}
+
 ggplot(aes(x = alcohol),data = wines)+
   geom_histogram(binwidth = 0.5, color = 'black', fill = 'orange')
 ```
@@ -68,13 +69,15 @@ higher levels. The histogram is positively skewed.
 What other properties do the wines with high alcohol content have?
 
 ```{r  echo=FALSE,message=FALSE, warning=FALSE}
-# top wines by alcohol content
+
+# shows top wines by alcohol content
 head(wines[order(-wines$alcohol),])
 ```
 
 It looks like they are mostly above average quality
 
 ```{r echo=FALSE, message=FALSE, residual.sugar}
+
 ggplot(aes(x = residual.sugar),data = wines)+
   geom_histogram(color = 'black', fill = 'green')
 
@@ -87,9 +90,11 @@ When looking at the residual sugar data, it was skewed badly to the left,
 long tailed on the right and there were some outliers.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, residual.sugar.log10}
+
 ggplot(aes(x = residual.sugar),data = subset(wines, residual.sugar<=30))+
   geom_histogram(color = 'black', fill = 'green')+
-  scale_y_log10()
+  scale_y_log10() # changes the scale of the x axis to log10
+
 ```
 
 
@@ -98,10 +103,12 @@ to get a more normal visualization. Apparently most white wines are low on sugar
 but some are really high.
 
 ```{r echo=FALSE, message=FALSE, volatile.acidity}
+# Here I give 2 similar looking plots
 p1 <- ggplot(aes(x = volatile.acidity),data = wines)+
   geom_histogram(binwidth = 0.01, color = 'black', fill = 'yellow')
 p2 <- ggplot(aes(x = fixed.acidity),data = wines)+
   geom_histogram(binwidth = 0.1, color = 'black', fill = 'blue')
+# I use grid.arrange to show both plots stacked vertically
 grid.arrange(p1,p2,ncol=1)
 
 ```
@@ -123,7 +130,7 @@ I wanted to see what the properties the outliers have.
 
 
 ```{r echo=FALSE,message=FALSE, warning=FALSE }
-# top wines by density
+# shows top wines by density
 head(wines[order(-wines$density),])
 
 
@@ -200,6 +207,7 @@ higher residual sugar.
 
 
 ```{r, echo=FALSE,correlation.matrix}
+# shows correlaton matrix
 cor.matrix <- cor(wines)
 round(cor.matrix,2)
 ```
@@ -211,7 +219,7 @@ feature, most strongly correlates with alcohol content.
 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-
+# produces scatter plot of quality and alcohol level
 ggplot(aes(x = quality, y = alcohol), data = wines)+
   geom_point(alpha = 0.1)+
   geom_smooth(color = 'red', method = "lm", se = FALSE)
@@ -226,6 +234,7 @@ line of regression.
 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
+# produces scatter plot of density and residual sugar
 ggplot(aes(x = density, y = residual.sugar), data = wines)+
   geom_point(size = 2)+
   ylim(0,25)+
@@ -238,10 +247,10 @@ Looking at this scatter plot, it appears that having a high sugar content makes
 for a more dense wine.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
-
+# produces scatter plot of density and alcohol
 ggplot(aes(x = density, y = alcohol), data = wines)+
   geom_point(size = 2)+
-  xlim(0.985, 1.005)
+  xlim(0.985, 1.005) # trims plot along x axis
 
 ```
 
@@ -251,9 +260,10 @@ the density.
 
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
+# produces scatter plot with alcohol and residual sugar
 ggplot(aes(x = alcohol, y = residual.sugar), data = wines)+
   geom_point(size = 2)+
-  ylim(0,25)+
+  ylim(0,25)+ #trims along y axis
   geom_smooth(color = 'red', method = "lm", se = FALSE)
 ```
 
@@ -261,8 +271,9 @@ As I suspected guessed, alcohol and residual sugar are inversely correlated.
 The red line is the line of regression.
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
+# produces scatter plot with quality and residual sugar
 ggplot(aes(x = quality, y = residual.sugar), data = wines)+
-  geom_jitter(alpha = 0.1, size=2)+
+  geom_jitter(alpha = 0.1, size=2)+ #scatters points a bit
   geom_smooth(color = 'red', method = "lm", se = FALSE)+
   ylim(0,30)
 
@@ -274,7 +285,7 @@ high residual sugar. The red line is the line of regression.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
 ggplot(aes(x = fixed.acidity, y = volatile.acidity), data = wines)+
-  geom_point(size = 2)+
+  geom_point(size = 2)+ #makes points larger
   xlim(4,12)+
   ylim(0,0.6)
 
@@ -287,13 +298,14 @@ between fixed acidity and volatile acidity.
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
 
-# sorted total sulfur dioxide into buckets
+# sorted total sulfur dioxide into bins
 wines$total.sulfur.dioxide.bucket <- cut(wines$total.sulfur.dioxide,
                                          c(0,50,100,150,200,250,300))
-
-ggplot(aes(x=round(total.sulfur.dioxide/5) * 5, y=quality), data=subset(wines,                                                           !is.na(total.sulfur.dioxide.bucket)))+
-  geom_line(stat = 'summary', fun = 'mean', linetype = 1)+
-  geom_smooth()+
+# Plots line graph of ratio of total sulfur dioxide to quality
+ggplot(aes(x=round(total.sulfur.dioxide/5) * 5, y=quality), data=subset(wines,
+                                                                        !is.na(total.sulfur.dioxide.bucket)))+ #removes NA's
+  geom_line(stat = 'summary', fun = 'mean', linetype = 1)+ #uses means of bins
+  geom_smooth()+ #makes smooth line
   xlim(0,300)
   
 
@@ -306,6 +318,7 @@ the sweet spot for total sulfur dioxide is just around 100.
 
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
+# produces box plot of quality to volatile acidity
 ggplot(aes(x = factor(quality), y = volatile.acidity), data = wines)+
   geom_boxplot()
 ```
@@ -344,8 +357,10 @@ The relationship of residual sugar to density was most strongly correlated.
 
 
 ```{r echo=FALSE, message = FALSE, warning = FALSE, Multivariate_Plots}
-
-wines$alcohol.factor <- factor(round(wines$alcohol))
+# rounds alcohol content and makes bins
+wines$alcohol.factor <- factor(round(wines$alcohol)) 
+# Makes line graph of residual sugar,density, and shows different colors
+# for each alcohol bin.
 ggplot(aes(x=round(residual.sugar), y=density), data = wines)+
   geom_line(aes(color = alcohol.factor), stat = 'summary', fun = 'mean')+
   ylim(0.988,1.004)+
@@ -362,9 +377,10 @@ sugar in order to get smoother lines.
 
 ```{r echo=FALSE, message = FALSE, warning = FALSE}
 
+# produces scatter plot of 3 factors
 ggplot(aes(total.sulfur.dioxide, y=alcohol), data = wines)+
   geom_point(aes(color = factor(quality)), size=2)+
-  scale_color_brewer(type = 'div', palette = 'Set1')+
+  scale_color_brewer(type = 'div', palette = 'Set1')+ #sets colors
   xlim(0, 275)
 
 ```
@@ -375,10 +391,10 @@ higher alcohol while lower ones have higher total sulfur dioxide.
 
 
 ```{r echo=FALSE, message = FALSE, warning = FALSE}
-
+# produces bar graph of three factors
 ggplot(aes(x=alcohol.factor, y=chlorides), data = wines)+
   geom_col(aes(color = factor(quality)))+
-  scale_color_brewer(palette="Set1")
+  scale_color_brewer(palette="Set1") #sets colors
   
 ```
 
@@ -416,13 +432,14 @@ Some of the factors had a middle range where levels were ideal.
 ### Plot One
 ```{r echo=FALSE, message = FALSE, warning = FALSE, Plot_One}
 
-wines <- read.csv('wineQualityWhites.csv')
+wines <- read.csv('wineQualityWhites.csv') #rereads original data
+# Makes scatter plot of quality and alcohol
 ggplot(aes(x = quality, y = alcohol), data = wines)+
   geom_point(alpha = 0.1, color = 'blue')+
-  geom_smooth(color = 'red', method = "lm", se = FALSE)+
-  labs(x = 'Quality Rating', y = 'Alcohol Percentage by Volume')+
-  ggtitle('White Wine Quality and Alcohol Content')+
-  scale_x_continuous(breaks = c(3,4,5,6,7,8,9))
+  geom_smooth(color = 'red', method = "lm", se = FALSE)+ #makes regression line
+  labs(x = 'Quality Rating', y = 'Alcohol Percentage by Volume')+ #label x & y
+  ggtitle('White Wine Quality and Alcohol Content')+ #title of plot
+  scale_x_continuous(breaks = c(3,4,5,6,7,8,9)) #sets stop labels
   
 ```
 
@@ -439,14 +456,14 @@ a line of regression to clearly show the relationship.
 # I sorted by total sulfur dioxide into buckets
 wines$total.sulfur.dioxide.bucket <- cut(wines$total.sulfur.dioxide,
                                          c(0,50,100,150,200,250,300))
-
-ggplot(aes(x=round(total.sulfur.dioxide/5) * 5, y=quality), data=subset(wines,                                                           !is.na(total.sulfur.dioxide.bucket)))+
+# produces line graph of mean quality by total sulfur dioxide
+ggplot(aes(x=round(total.sulfur.dioxide/5) * 5, y=quality), data=subset(wines,                                                           !is.na(total.sulfur.dioxide.bucket)))+ #removes NA's
   geom_line(stat = 'summary', fun = 'mean', linetype = 1)+
   geom_smooth()+
   xlim(0,300)+
-  labs(y = 'Quality Rating', x = 'Total Sulfur Dioxide mg/L')+
-  ggtitle('Quality Rating of White Wines by Total Sulfur Dioxide')+
-  scale_x_continuous(breaks = c(0,50,100,150,200,250,300))
+  labs(y = 'Quality Rating', x = 'Total Sulfur Dioxide mg/L')+ #labels axes
+  ggtitle('Quality Rating of White Wines by Total Sulfur Dioxide')+ #adds title
+  scale_x_continuous(breaks = c(0,50,100,150,200,250,300)) # labels breaks
 
 ```
 
@@ -464,14 +481,16 @@ outliers. Lastly I used Geom_Smooth to show a nice smooth curve.
 ### Plot Three
 ```{r echo=FALSE, warning = FALSE, message = FALSE, Plot_Three}
 
+# rounds alcohol factor and makes bins
 wines$alcohol.factor <- factor(round(wines$alcohol))
+# produces multiple line graphs of different colors by bin
 ggplot(aes(x=round(residual.sugar), y=density), data = wines)+
   geom_line(aes(color = alcohol.factor), stat = 'summary', fun = 'mean')+
   labs(x='Residual Sugar mg/L', y=expression(paste('Density g/cm'^'3')))+
   ggtitle('Density of White Wines by Sugar and Alcohol Content')+
   ylim(0.988,1.004)+
   xlim(0,25)+
-  labs(color = 'Alcohol %')
+  labs(color = 'Alcohol %') # labels key on right side
 
 ```
 
