@@ -1,0 +1,8 @@
+Websites used for this project besides Udacity:
+
+https://stackoverflow.com/ Multiple pages there
+http://environmentalcomputing.net/plotting-with-ggplot-adding-titles-and-axis-names/
+http://www.sthda.com/english/wiki/ggplot2-axis-scales-and-transformations
+https://rpubs.com/brouwern/superscript
+https://ggplot2.tidyverse.org/reference/geom_bar.html
+http://www.cookbook-r.com/Graphs/Lines_(ggplot2)/
