@@ -497,6 +497,10 @@ with the density of the wine. I also found that some factors have a sweet
 spot where their levels were optimal for higher quality. There is a clear
 relationship between alcohol level and quality.</br>
 
+I struggled to find relationships between many of the factors. They seemed
+irrelevant to my analysis. They contributed very little, if not at all, to the
+main Quality factor.</br>
+
 It would be interesting to contrast the white wines with the sister data set of
 red wines. I'm curious to see the chemical differences there are between them.
 Would red wines generally be higher in density because they are sweeter?</br>
